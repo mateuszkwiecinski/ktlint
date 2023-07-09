@@ -1,4 +1,3 @@
-import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
@@ -8,19 +7,33 @@ plugins {
 kotlin {
     // All modules, the CLI included, must have an explicit API
     explicitApi()
+    jvmToolchain(20)
 }
 
-tasks.withType<KotlinCompile>().configureEach {
-    compilerOptions {
-        jvmTarget.set(JvmTarget.JVM_1_8)
-    }
-}
-
-// compileJava task and compileKotlin task jvm target compatibility should be set to the same Java version.
-// For some reason, we fallback from toolchain using, see https://github.com/pinterest/ktlint/pull/1787
+val targetJavaVersion = JavaVersion.VERSION_1_8
 tasks.withType<JavaCompile>().configureEach {
-    sourceCompatibility = JavaVersion.VERSION_1_8.toString()
-    targetCompatibility = JavaVersion.VERSION_1_8.toString()
+    options.release.set(targetJavaVersion.majorVersion.toInt())
+}
+tasks.withType<KotlinCompile>().configureEach {
+    kotlinOptions.jvmTarget = targetJavaVersion.toString()
+}
+
+listOf(8, 11, 17).forEach { majorVersion ->
+    val jdkTest =
+        tasks.register<Test>("testJdk$majorVersion") {
+            javaLauncher =
+                javaToolchains.launcherFor {
+                    languageVersion = JavaLanguageVersion.of(majorVersion)
+                }
+
+            description = "Runs the test suite on JDK $majorVersion"
+            group = LifecycleBasePlugin.VERIFICATION_GROUP
+
+            // Copy inputs from normal Test task.
+            val testTask = tasks.test.get()
+            classpath = testTask.classpath
+            testClassesDirs = testTask.testClassesDirs
+        }
 }
 
 val skipTests: String = providers.systemProperty("skipTests").getOrElse("false")
