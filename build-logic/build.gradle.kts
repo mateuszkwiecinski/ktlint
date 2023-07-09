@@ -30,7 +30,7 @@ dependencies {
             logger.warn("Enabling kotlin dev version!")
             libs.kotlin.plugin.dev
         } else {
-            libs.kotlin.plugin
+            libs.kotlin.plugin.asProvider()
         }
     implementation(kotlinPlugin)
     implementation(libs.dokka)
