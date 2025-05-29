@@ -4,6 +4,8 @@ import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.SoftAssertions
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.condition.DisabledOnJre
+import org.junit.jupiter.api.condition.JRE
 import org.junit.jupiter.api.io.TempDir
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.ValueSource
@@ -56,6 +58,7 @@ class SimpleCLITest {
             }
     }
 
+    @DisabledOnJre(JRE.JAVA_24) // Re-enable once https://github.com/pinterest/ktlint/issues/2973 is addressed
     @Test
     fun `Given some code without errors then return from lint with normal exit code and no error output`(
         @TempDir
