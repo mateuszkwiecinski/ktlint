@@ -1,9 +1,19 @@
+import org.gradle.kotlin.dsl.gradleKotlinDsl
+import org.jetbrains.kotlin.gradle.dsl.KotlinVersion
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+
 plugins {
-    `kotlin-dsl`
+    `java-gradle-plugin`
+    alias(libs.plugins.kotlin.jvm)
+    alias(libs.plugins.kotlin.sam.with.receiver)
 }
 
 repositories {
     mavenCentral()
+}
+
+samWithReceiver {
+    annotation("org.gradle.api.HasImplicitReceiver")
 }
 
 kotlin {
@@ -17,6 +27,27 @@ kotlin {
     )
 }
 
+gradlePlugin {
+    plugins {
+        register("ktlintDokka") {
+            id = "ktlint-dokka"
+            implementationClass = "DokkaPlugin"
+        }
+        register("ktlintKotlinCommon") {
+            id = "ktlint-kotlin-common"
+            implementationClass = "KotlinCommonPlugin"
+        }
+        register("ktlintPublication") {
+            id = "ktlint-publication"
+            implementationClass = "PublicationPlugin"
+        }
+        register("ktlintPublicationLibrary") {
+            id = "ktlint-publication-library"
+            implementationClass = "PublicationLibraryPlugin"
+        }
+    }
+}
+
 dependencies {
     val kotlinPlugin =
         if (hasProperty("kotlinDev")) {
@@ -27,6 +58,7 @@ dependencies {
             libs.kotlin.plugin.asProvider()
         }
     implementation(kotlinPlugin)
+    implementation(gradleKotlinDsl())
     implementation(libs.dokka)
     implementation(libs.poko)
 }
