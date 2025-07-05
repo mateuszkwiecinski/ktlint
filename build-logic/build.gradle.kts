@@ -25,6 +25,18 @@ kotlin {
             .get()
             .toInt(),
     )
+
+    compilerOptions {
+        // Match version enforced in runtime by current Gradle version https://docs.gradle.org/current/userguide/compatibility.html#kotlin
+        @Suppress("DEPRECATION")
+        apiVersion.set(KotlinVersion.KOTLIN_1_8)
+    }
+}
+
+tasks.withType<KotlinCompile>().configureEach {
+    compilerOptions {
+        freeCompilerArgs.add("-Xsuppress-version-warnings") // ignores deprecated kotlin language version
+    }
 }
 
 gradlePlugin {
