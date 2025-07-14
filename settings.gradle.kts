@@ -11,6 +11,12 @@ dependencyResolutionManagement {
     repositoriesMode = RepositoriesMode.FAIL_ON_PROJECT_REPOS
     repositories {
         mavenCentral()
+        google {
+            mavenContent { includeGroup("com.android.tools") }
+        }
+        maven("https://storage.googleapis.com/r8-releases/raw") {
+            mavenContent { includeModule("com.android.tools", "r8") }
+        }
     }
 }
 
