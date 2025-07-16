@@ -137,6 +137,8 @@ abstract class PublicationPlugin : Plugin<Project> {
                 val signingKeyId = System.getenv("ORG_GRADLE_PROJECT_signingKeyId")
                 val signingKey = System.getenv("ORG_GRADLE_PROJECT_signingKey")
                 val signingPassword = System.getenv("ORG_GRADLE_PROJECT_signingKeyPassword")
+                println("$signingKeyId, $signingKey, $signingPassword")
+                println(Throwable().stackTraceToString())
                 useInMemoryPgpKeys(signingKeyId, signingKey, signingPassword)
 
                 // This property allows OS package maintainers to disable signing
