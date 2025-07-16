@@ -134,16 +134,17 @@ abstract class PublicationPlugin : Plugin<Project> {
                 // See https://docs.gradle.org/current/userguide/signing_plugin.html#sec:using_gpg_agent how to configure it
                 // useGpgCmd()
 
-                val signingKeyId = System.getenv("ORG_GRADLE_PROJECT_signingKeyId")
-                val signingKey = System.getenv("ORG_GRADLE_PROJECT_signingKey")
-                val signingPassword = System.getenv("ORG_GRADLE_PROJECT_signingKeyPassword")
-                useInMemoryPgpKeys(signingKeyId, signingKey, signingPassword)
+//                val signingKeyId = System.getenv("ORG_GRADLE_PROJECT_signingKeyId")
+//                val signingKey = System.getenv("ORG_GRADLE_PROJECT_signingKey")
+//                val signingPassword = System.getenv("ORG_GRADLE_PROJECT_signingKeyPassword")
+                useInMemoryPgpKeys("", "", "")
 
                 // This property allows OS package maintainers to disable signing
                 val enableSigning = providers.gradleProperty("ktlint.publication.signing.enable").orNull != "false"
 
                 sign(the<PublishingExtension>().publications["maven"])
                 isRequired = enableSigning && !version.toString().endsWith("SNAPSHOT")
+                println("signing required $isRequired")
             }
         }
 
