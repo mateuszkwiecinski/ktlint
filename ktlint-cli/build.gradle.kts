@@ -63,7 +63,7 @@ val shadowJarExecutable by tasks.registering(ShadowJarExecutableTask::class) {
 val signShadowJarExecutable by tasks.registering(Sign::class) {
     dependsOn(shadowJarExecutable)
 
-    sign(shadowJarExecutable.flatMap { it.selfExecutable }.get())
+//    sign(shadowJarExecutable.flatMap { it.selfExecutable }.get())
 }
 
 tasks.withType<Test>().configureEach {
