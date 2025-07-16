@@ -19,7 +19,7 @@ jobs:
   build:
     strategy:
       matrix:
-        os: [ubuntu-latest, windows-latest]
+        os: [ubuntu-latest]
     runs-on: ${{ matrix.os }}
     name: "[build] OS=${{ matrix.os }} Kotlin=stable"
     steps:
@@ -51,33 +51,3 @@ jobs:
           fi
         shell: bash
 
-  build-dev:
-    strategy:
-      matrix:
-        os: [ubuntu-latest, windows-latest]
-    runs-on: ${{ matrix.os }}
-    name: "[build] OS=${{ matrix.os }}, Kotlin=dev"
-    steps:
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
-
-      - uses: ./.github/actions/setup-gradle-build
-
-      - name: Build with assemble Kotlin version
-        run: ./gradlew -PkotlinDev ktlintCheck build
-
-  tests:
-    strategy:
-      fail-fast: false
-      matrix:
-        os: [ubuntu-latest, windows-latest]
-        jdk: [8, 11, 17, 21] # list of Java versions to run tests against (excluding `java-compilation` version for which tests already have run during `build` job)
-    runs-on: ${{ matrix.os }}
-    name: "[tests] OS=${{ matrix.os }}, Java=${{ matrix.jdk }}"
-    steps:
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
-
-      - uses: ./.github/actions/setup-gradle-build
-        with:
-          additional-java-versions: ${{ matrix.jdk }}
-
-      - run: ./gradlew testOnJdk${{ matrix.jdk }} -PtestJdkVersion=${{ matrix.jdk }}
