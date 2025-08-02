@@ -44,7 +44,7 @@ tasks.check {
 publishing {
     publications {
         create<MavenPublication>("mavenJava") {
-            from(components.named("java").get())
+            from(components["java"])
             pom {
                 licenses {
                     license {
